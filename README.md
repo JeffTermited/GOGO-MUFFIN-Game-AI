@@ -1,56 +1,110 @@
-# GOGO Muffin AI Support Platform
+# Click Recorder
 
-An extensible conversational AI framework that helps users with reminders, web lookups, image annotation, and more—backed by a suite of custom tools and automations. Ideal as a demonstration of end-to-end solution design, data orchestration, and process automation.
+A lightweight Python tool for interactive screen-click annotation and YOLO-style screenshot labeling.
+
+## 📂 Project Structure
+
+```
+click_data/
+├── click_recorder.py   # Main annotation script
+├── config.json         # Saved test-mode box dimensions
+├── images/             # Captured screenshots organized by class
+│   ├── boss_button/
+│   ├── next_level/
+│   └── ...
+├── labels/             # Generated YOLO .txt label files by class
+│   ├── boss_button/
+│   ├── next_level/
+│   └── ...
+├── previews/           # Full-screen preview images (normal & test mode)
+│   ├── boss_button_preview.png
+│   ├── boss_button_normal_preview.png
+│   └── ...
+└── log/
+    ├── click_log.txt   # Operation log
+    └── archive/        # Archived logs
+```
 
 ---
 
-## 📦 Repository Structure
+## 🚀 Features
 
-```text
-gogo-muffin/
-├── click_data/
-│   ├── click_recorder.py       # Interactive click annotation & YOLO labeling tool
-│   ├── images/                 # Captured screenshots by class
-│   ├── labels/                 # Generated YOLO .txt label files
-│   ├── log/                    # Interaction logs & archives
-│   └── previews/               # Full-screen previews with drawn boxes
-├── automations/                # iCal-based task definitions for reminders & searches
-├── tools/                      # Other custom modules (web, user_info, etc.)
-├── config.json                 # Global settings (e.g. default box dimensions)
-├── README.md                   # ← You are here
-└── requirements.txt            # Python dependencies
+* **Multi-Class Selection**: Press `1`–`5` to choose a class (e.g. `boss_button`, `next_level`, `next_stage`, `lvs`, `stages`).
+* **Test Mode** (`t`):
 
-🚀 Project Overview
+  * Displays a red bounding box overlay following the mouse.
+  * Adjust box size with arrow keys (`↑`/`↓` to change height, `←`/`→` to change width).
+  * Exit test mode to save box dimensions to `config.json`.
+* **Normal Mode**:
 
-GOGO Muffin is more than “just another chatbot”—it’s a toolbox you can extend:
-	1.	Conversational Core
-Built on Python, our engine routes user intents to:
-	•	Reminder Automations (calendar tasks)
-	•	Web & News Searches
-	•	Image Capture & Annotation
-	2.	Custom Tools
-	•	Click Recorder: Interactive module to label UI elements via screenshots and generate YOLO-format labels.
-	•	Scheduler: Converts natural-language reminders into iCal VEVENT automations.
-	•	Web Browser & News: Real-time search and citation retrieval.
-	•	User Info & Memories: Personalization based on preferences & location.
-	3.	Business Analyst Lens
-Every component follows BA best practices:
-	•	Requirements Elicitation: Clean API for adding new tools.
-	•	Process Modeling: Modular pipelines for capture → label → log → preview.
-	•	Metrics & Dashboards: Logs, previews, and config feed into usage analytics.
-	•	Documentation: This README + per-module READMEs ensure clarity for stakeholders.
+  * Left-click to capture a full-screen screenshot.
+  * Saves the image under `images/<class>/`.
+  * Generates a YOLO-style label file in `labels/<class>/`.
+  * Updates `log/click_log.txt` with click coordinates.
+  * Produces a red-box preview of the capture in `previews/`.
+* **Pause/Resume**: Press `p` to toggle.
+* **Quit**: Press `q` to exit and restore terminal settings.
+* **Log Archiving**: On startup, existing `click_log.txt` is moved to `log/archive/`.
 
-🛠 Click Recorder Module
+---
 
-See click_data/click_recorder.py for a self-contained annotation tool:
-	•	Test Mode: Visually tune capture‐box size
-	•	Normal Mode:
-	•	Full‐screen screenshot → images/<class>/...
-	•	YOLO label → labels/<class>/...
-	•	Operation log → log/click_log.txt
-	•	Preview image → previews/<class>_normal_preview_...png
+## 📦 Dependencies
 
-Config persists last box size in config.json.
+* Python 3.7+
+* [mss](https://pypi.org/project/mss/)
+* [Pillow](https://pypi.org/project/Pillow/)
+* [pynput](https://pypi.org/project/pynput/)
+* `tkinter` (bundled with Python)
 
-## 📄 License
+Install via:
+
+```bash
+python3 -m pip install --user mss pillow pynput
+```
+
+---
+
+## 📋 Usage
+
+1. **Run**
+
+   ```bash
+   cd click_data
+   python3 click_recorder.py
+   ```
+
+2. **Controls**
+
+   * `1`–`5`: Select class
+   * `t`: Toggle test mode
+   * Arrow keys: Adjust box size in test mode
+   * `p`: Pause / resume
+   * `q`: Quit
+
+3. **Outputs**
+
+   * **Screenshots** → `images/<class>/...`
+   * **Labels** → `labels/<class>/...`
+   * **Previews** → `previews/...`
+   * **Logs** → `log/click_log.txt` (archived under `log/archive/` on startup)
+
+---
+
+## ⚙️ Configuration
+
+After first run, `config.json` stores:
+
+```json
+{
+  "box_width": 100,
+  "box_height": 55
+}
+```
+
+To reset box dimensions, delete `config.json`.
+
+---
+
+## 📝 License
+
 MIT © Jeff Hsieh
